@@ -380,24 +380,25 @@ export function Messenger({ targetUserId, onClearTarget }: MessengerProps) {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="p-6 border-b border-gray-200">
+      <div className="p-4 md:p-6 border-b border-gray-200">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Мессенджер</h1>
-            <p className="text-gray-600 mt-1">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Мессенджер</h1>
+            <p className="text-sm md:text-base text-gray-600 mt-1">
               Общение с коллегами и обмен файлами
             </p>
           </div>
-          <Button onClick={() => setShowNewChatModal(true)}>
+          <Button onClick={() => setShowNewChatModal(true)} size="sm" className="md:text-base">
             <Plus className="h-4 w-4 mr-2" />
-            Новый чат
+            <span className="hidden sm:inline">Новый чат</span>
+            <span className="sm:hidden">Чат</span>
           </Button>
         </div>
       </div>
 
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
         {/* Список чатов */}
-        <div className="w-80 border-r border-gray-200 flex flex-col">
+        <div className="w-full lg:w-80 border-b lg:border-b-0 lg:border-r border-gray-200 flex flex-col max-h-64 lg:max-h-none">
           <div className="p-4 border-b border-gray-200">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -406,16 +407,16 @@ export function Messenger({ targetUserId, onClearTarget }: MessengerProps) {
                 placeholder="Поиск чатов..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm md:text-base"
               />
             </div>
           </div>
 
           <div className="flex-1 overflow-y-auto">
             {filteredChats.length === 0 ? (
-              <div className="p-6 text-center">
-                <MessageCircle className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-500 mb-3">
+              <div className="p-4 md:p-6 text-center">
+                <MessageCircle className="h-8 w-8 md:h-12 md:w-12 text-gray-300 mx-auto mb-3" />
+                <p className="text-sm md:text-base text-gray-500 mb-3">
                   {searchTerm ? 'Чаты не найдены' : 'У вас пока нет чатов'}
                 </p>
                 {!searchTerm && (
@@ -446,7 +447,7 @@ export function Messenger({ targetUserId, onClearTarget }: MessengerProps) {
                     <button
                       key={chat.id}
                       onClick={() => handleChatSelect(chat.id)}
-                      className={`w-full p-4 text-left hover:bg-gray-50 transition-colors border-b border-gray-100 ${
+                      className={`w-full p-3 md:p-4 text-left hover:bg-gray-50 transition-colors border-b border-gray-100 ${
                         activeChat === chat.id ? 'bg-blue-50 border-blue-200' : ''
                       }`}
                     >
@@ -454,20 +455,20 @@ export function Messenger({ targetUserId, onClearTarget }: MessengerProps) {
                         <img
                           src={otherParticipant.avatar || 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop'}
                           alt={otherParticipant.name}
-                          className="w-12 h-12 rounded-full object-cover"
+                          className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover flex-shrink-0"
                         />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between">
-                            <h4 className="font-medium text-gray-900 truncate">
+                            <h4 className="text-sm md:text-base font-medium text-gray-900 truncate">
                               {otherParticipant.name}
                             </h4>
                             {unreadCount > 0 && (
-                              <span className="bg-red-500 text-white text-xs rounded-full px-2 py-1 min-w-[20px] text-center">
+                              <span className="bg-red-500 text-white text-xs rounded-full px-2 py-1 min-w-[20px] text-center flex-shrink-0">
                                 {unreadCount > 99 ? '99+' : unreadCount}
                               </span>
                             )}
                           </div>
-                          <p className="text-sm text-gray-500 capitalize truncate">
+                          <p className="text-xs md:text-sm text-gray-500 capitalize truncate">
                             {otherParticipant.role} • {otherParticipant.department || 'Не указан'}
                           </p>
                           {chat.lastMessage && (
@@ -492,14 +493,20 @@ export function Messenger({ targetUserId, onClearTarget }: MessengerProps) {
               {/* Заголовок чата */}
               <div className="p-4 border-b border-gray-200 bg-white">
                 <div className="flex items-center space-x-3">
+                  <button
+                    onClick={() => setActiveChat(null)}
+                    className="lg:hidden text-gray-400 hover:text-gray-600 transition-colors mr-2"
+                  >
+                    <ArrowLeft className="h-5 w-5" />
+                  </button>
                   <img
                     src={currentOtherParticipant.avatar || 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=40&h=40&fit=crop'}
                     alt={currentOtherParticipant.name}
-                    className="w-10 h-10 rounded-full object-cover"
+                    className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover flex-shrink-0"
                   />
                   <div>
-                    <h3 className="font-semibold text-gray-900">{currentOtherParticipant.name}</h3>
-                    <p className="text-sm text-gray-500 capitalize">
+                    <h3 className="text-sm md:text-base font-semibold text-gray-900">{currentOtherParticipant.name}</h3>
+                    <p className="text-xs md:text-sm text-gray-500 capitalize">
                       {currentOtherParticipant.role} • {currentOtherParticipant.department || 'Не указан'}
                     </p>
                   </div>
@@ -507,11 +514,11 @@ export function Messenger({ targetUserId, onClearTarget }: MessengerProps) {
               </div>
 
               {/* Сообщения */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4">
                 {currentChat.messages.length === 0 ? (
-                  <div className="text-center py-8">
-                    <MessageCircle className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-                    <p className="text-gray-500">Начните общение с {currentOtherParticipant.name}</p>
+                  <div className="text-center py-6 md:py-8">
+                    <MessageCircle className="h-8 w-8 md:h-12 md:w-12 text-gray-300 mx-auto mb-3" />
+                    <p className="text-sm md:text-base text-gray-500">Начните общение с {currentOtherParticipant.name}</p>
                   </div>
                 ) : (
                   currentChat.messages.map((message, index) => {
@@ -521,7 +528,7 @@ export function Messenger({ targetUserId, onClearTarget }: MessengerProps) {
                     return (
                       <div key={message.id}>
                         {showDate && (
-                          <div className="text-center my-4">
+                          <div className="text-center my-3 md:my-4">
                             <span className="bg-gray-100 text-gray-600 text-xs px-3 py-1 rounded-full">
                               {formatDate(message.timestamp)}
                             </span>
@@ -533,25 +540,25 @@ export function Messenger({ targetUserId, onClearTarget }: MessengerProps) {
                           }`}
                         >
                           <div
-                            className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                            className={`max-w-xs sm:max-w-sm lg:max-w-md px-3 md:px-4 py-2 rounded-lg ${
                               message.senderId === user.id
                                 ? 'bg-blue-500 text-white'
                                 : 'bg-gray-100 text-gray-900'
                             }`}
                           >
                             {message.content && (
-                              <p className="text-sm break-words">{message.content}</p>
+                              <p className="text-xs md:text-sm break-words">{message.content}</p>
                             )}
                             {message.file && (
-                              <div className="mt-2 p-2 bg-black bg-opacity-10 rounded">
+                              <div className="mt-2 p-2 bg-black bg-opacity-10 rounded text-xs md:text-sm">
                                 <div className="flex items-center space-x-2">
                                   <Paperclip className="h-3 w-3" />
-                                  <span className="text-xs truncate">{message.file.name}</span>
+                                  <span className="truncate">{message.file.name}</span>
                                 </div>
-                                <div className="text-xs opacity-75 mt-1">
+                                <div className="opacity-75 mt-1">
                                   {formatFileSize(message.file.size)}
                                 </div>
-                                <div className="flex space-x-1 mt-2">
+                                <div className="flex flex-wrap gap-1 mt-2">
                                   {message.file.type.startsWith('image/') && (
                                     <button
                                       onClick={() => {
@@ -574,7 +581,7 @@ export function Messenger({ targetUserId, onClearTarget }: MessengerProps) {
                                         };
                                         document.body.appendChild(modal);
                                       }}
-                                      className="text-xs bg-white bg-opacity-20 px-2 py-1 rounded hover:bg-opacity-30"
+                                      className="bg-white bg-opacity-20 px-2 py-1 rounded hover:bg-opacity-30"
                                     >
                                       <Eye className="h-3 w-3" />
                                     </button>
@@ -588,7 +595,7 @@ export function Messenger({ targetUserId, onClearTarget }: MessengerProps) {
                                       link.click();
                                       document.body.removeChild(link);
                                     }}
-                                    className="text-xs bg-white bg-opacity-20 px-2 py-1 rounded hover:bg-opacity-30"
+                                    className="bg-white bg-opacity-20 px-2 py-1 rounded hover:bg-opacity-30"
                                   >
                                     <Download className="h-3 w-3" />
                                   </button>
@@ -608,15 +615,15 @@ export function Messenger({ targetUserId, onClearTarget }: MessengerProps) {
               </div>
 
               {/* Область ввода */}
-              <div className="border-t border-gray-200 p-4 bg-white">
+              <div className="border-t border-gray-200 p-3 md:p-4 bg-white">
                 {selectedFile && (
-                  <div className="mb-3 p-3 bg-gray-50 rounded-lg flex items-center justify-between">
+                  <div className="mb-3 p-2 md:p-3 bg-gray-50 rounded-lg flex items-center justify-between">
                     <div className="flex items-center space-x-2">
                       <Paperclip className="h-4 w-4 text-gray-500" />
-                      <span className="text-sm text-gray-700 truncate">
+                      <span className="text-xs md:text-sm text-gray-700 truncate">
                         {selectedFile.name}
                       </span>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-gray-500 flex-shrink-0">
                         ({formatFileSize(selectedFile.size)})
                       </span>
                     </div>
@@ -628,7 +635,7 @@ export function Messenger({ targetUserId, onClearTarget }: MessengerProps) {
                     </button>
                   </div>
                 )}
-                <div className="flex items-end space-x-2">
+                <div className="flex items-end space-x-1 md:space-x-2">
                   <input
                     type="file"
                     ref={fileInputRef}
@@ -638,7 +645,7 @@ export function Messenger({ targetUserId, onClearTarget }: MessengerProps) {
                   />
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+                    className="p-2 text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0"
                   >
                     <Paperclip className="h-5 w-5" />
                   </button>
@@ -653,7 +660,7 @@ export function Messenger({ targetUserId, onClearTarget }: MessengerProps) {
                         }
                       }}
                       placeholder="Введите сообщение..."
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-sm md:text-base"
                       rows={1}
                     />
                   </div>
@@ -661,6 +668,7 @@ export function Messenger({ targetUserId, onClearTarget }: MessengerProps) {
                     onClick={handleSendMessage}
                     disabled={!newMessage.trim() && !selectedFile}
                     size="sm"
+                    className="flex-shrink-0"
                   >
                     <Send className="h-4 w-4" />
                   </Button>
@@ -670,9 +678,9 @@ export function Messenger({ targetUserId, onClearTarget }: MessengerProps) {
           ) : (
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
-                <MessageCircle className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">Выберите чат</h3>
-                <p className="text-gray-600 mb-4">
+                <MessageCircle className="h-12 w-12 md:h-16 md:w-16 text-gray-300 mx-auto mb-4" />
+                <h3 className="text-base md:text-lg font-medium text-gray-900 mb-2">Выберите чат</h3>
+                <p className="text-sm md:text-base text-gray-600 mb-4">
                   Выберите существующий чат или создайте новый
                 </p>
                 <Button onClick={() => setShowNewChatModal(true)}>
